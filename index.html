@@ -16,420 +16,26 @@
 
   <link rel="dns-prefetch" href="//web.archive.org/web/20230223193804/https://fonts.googleapis.com/" />
   <link rel="dns-prefetch" href="//web.archive.org/web/20230223193804/https://fonts.gstatic.com/" />
-  <title>TypeScript vs. C#: LINQ</title>
+  <title>LINQ => TypeScript</title>
   <meta name="keywords" content="TypeScript,TypeScript,C#,LINQ">
   <link
     href="https://web.archive.org/web/20230223193804cs_/https://fonts.googleapis.com/css?family=Source+Code+Pro|Open+Sans:400,400i,600"
     rel="stylesheet">
-  <link rel="icon" type="image/png" href="#" />
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
+  <link rel="manifest" href="/site.webmanifest">
+
   <meta name="generator" content="2023 Gates Company" />
-
-
-  <style type="text/css">
-    .body {
-      position: relative;
-      display: grid;
-      margin: 0 auto;
-      padding: 2em 0;
-      grid-template-columns: 160px min(50em, 100% - 320px - 6em) 160px;
-      grid-template-rows: auto calc(90px + 2em) 50vh 25vh auto auto;
-      column-gap: 2em;
-      justify-items: stretch;
-      align-items: stretch;
-      justify-content: space-around;
-    }
-
-    .body header {
-      grid-row: 1;
-      grid-column: 2;
-    }
-
-    #banner1 {
-      min-width: 970px;
-      width: 100%;
-      height: 90px;
-      grid-row: 2;
-      grid-column: 2;
-      align-self: center;
-    }
-
-    .banner1 {
-      display: inline-block;
-      min-width: 400px;
-      max-width: 970px;
-      width: 100%;
-      height: 90px;
-    }
-
-    #content {
-      grid-row: 3 / span 4;
-      grid-column: 2;
-    }
-
-    #margin1 {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 160px;
-      height: 600px;
-      grid-row: 4;
-      grid-column: 1;
-    }
-
-    #margin2 {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 160px;
-      height: 600px;
-      grid-row: 6;
-      grid-column: 3;
-    }
-
-    #square1,
-    #square2 {
-      display: none;
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 250px;
-      height: 250px;
-      align-self: center;
-    }
-
-
-    h1 {
-      margin-bottom: 0;
-    }
-
-    img.hero {
-      display: block;
-    }
-
-
-    @media screen and (min-width: 415px) and (max-width: 979px) {
-      .body {
-        width: 100%;
-        margin: 0 auto;
-        padding: 2em 2em 0 2em;
-        grid-template-columns: 0 100% 0;
-        grid-template-rows: auto calc(250px + 2em) 50vh 25vh auto auto calc(250px + 2em);
-      }
-
-      img.hero {
-        width: 100%;
-        height: auto;
-      }
-
-      #margin1,
-      #margin2,
-      #banner1,
-      .banner1 {
-        display: none;
-      }
-
-      #square1 {
-        display: block;
-        position: relative;
-        grid-row: 2;
-        grid-column: 2;
-        margin: auto;
-      }
-
-      #square2 {
-        display: block;
-        position: relative;
-        grid-row: 7;
-        grid-column: 2;
-        margin: auto;
-      }
-    }
-
-    @media screen and (max-width: 414px) {
-      .body {
-        width: 100%;
-        margin: 0 auto;
-        padding: 2em 2em 0 2em;
-        font-size: .85em;
-        grid-template-columns: 0 100% 0;
-        grid-template-rows: auto calc(250px + 2em) 50vh 25vh auto auto calc(250px + 2em);
-      }
-
-      img.hero {
-        width: 100%;
-        height: auto;
-        object-fit: cover;
-        min-width: inherit;
-        max-width: inherit;
-      }
-
-      #margin1,
-      #margin2,
-      #banner1,
-      .banner1 {
-        display: none;
-      }
-
-      #square1 {
-        display: block;
-        position: relative;
-        grid-row: 2;
-        grid-column: 2;
-        margin: auto;
-      }
-
-      #square2 {
-        display: block;
-        position: relative;
-        grid-row: 7;
-        grid-column: 2;
-        margin: auto;
-      }
-    }
-
-
-    figure {
-      padding: 0;
-      margin: 0;
-    }
-
-    .image-credit {
-      font-size: .75em;
-      color: rgba(0, 0, 0, .35);
-      float: right;
-      clear: right;
-    }
-
-    .image-credit * {
-      color: rgba(0, 0, 0, .5) !important;
-    }
-
-    .last-updated {
-      opacity: .5;
-      font-size: .8em;
-    }
-
-    p>code {
-      font-size: .9em;
-      font-family: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    }
-
-    pre {
-      font-size: .9em;
-    }
-
-    pre,
-    pre * {
-      font-family: 'Source Code Pro', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-    }
-
-    .line {
-      display: block;
-      min-height: 1.25em;
-      /* Should match the line height (or be non zero) so empty lines don't get collapsed */
-    }
-
-    .keyword {
-      color: #f1e1b0;
-    }
-
-    .symbol {
-      color: #bbb;
-    }
-
-    .const {
-      color: #eee;
-    }
-
-    .comment {
-      color: #888;
-    }
-
-    .ident {
-      color: #fff;
-    }
-
-    .highlight.line {
-      background: #444;
-      text-shadow: 1px 1px 2px #000;
-    }
-
-    .add.line {
-      background: #333;
-      text-shadow: 1px 1px 2px #000;
-    }
-
-    .remove.line {
-      background: #333;
-      text-shadow: 1px 1px 2px #000;
-    }
-
-    .add.line .keyword {
-      color: rgba(0, 255, 0, .8);
-    }
-
-    .add.line .symbol {
-      color: rgba(0, 255, 0, .7);
-    }
-
-    .add.line .const {
-      color: rgba(0, 255, 0, .9);
-    }
-
-    .add.line .comment {
-      color: rgba(0, 255, 0, .5);
-    }
-
-    .add.line .ident {
-      color: rgba(0, 255, 0, 1);
-    }
-
-    .remove.line .keyword {
-      color: rgba(255, 32, 32, .9);
-    }
-
-    .remove.line .symbol {
-      color: rgba(255, 0, 0, .8);
-    }
-
-    .remove.line .const {
-      color: rgba(255, 64, 64, .9);
-    }
-
-    .remove.line .comment {
-      color: rgba(255, 64, 64, .9);
-    }
-
-    .remove.line .ident {
-      color: rgba(255, 64, 64, 1);
-    }
-
-
-    p>code,
-    code[class*="language-"],
-    pre[class*="language-"] {
-      color: #f8f8f2;
-      background: none;
-      text-shadow: 0 1px rgba(0, 0, 0, 0.3);
-      text-align: left;
-      white-space: pre;
-      word-spacing: normal;
-      word-break: normal;
-      word-wrap: normal;
-      line-height: 1.5;
-
-      -moz-tab-size: 4;
-      -o-tab-size: 4;
-      tab-size: 4;
-
-      -webkit-hyphens: none;
-      -moz-hyphens: none;
-      -ms-hyphens: none;
-      hyphens: none;
-    }
-
-    /* Code blocks */
-    pre[class*="language-"] {
-      padding: 1em;
-      margin: .5em 0;
-      overflow: auto;
-      border-radius: 0.3em;
-    }
-
-    :not(pre)>code,
-    pre[class*="language-"] {
-      background: #272822;
-    }
-
-    /* Inline code */
-    :not(pre)>code {
-      padding: 0 .3em;
-      border-radius: .3em;
-      white-space: normal;
-    }
-
-    .token.comment,
-    .token.prolog,
-    .token.doctype,
-    .token.cdata {
-      color: slategray;
-    }
-
-    .token.punctuation {
-      color: #cbcb9f;
-    }
-
-    .namespace {
-      opacity: .7;
-    }
-
-    .token.property,
-    .token.tag,
-    .token.constant,
-    .token.symbol,
-    .token.deleted {
-      color: #afc2d4;
-    }
-
-    .token.boolean,
-    .token.number {
-      color: #afc2d4;
-    }
-
-    .token.selector,
-    .token.attr-name,
-    .token.string,
-    .token.char,
-    .token.builtin,
-    .token.inserted {
-      color: #afc2d4;
-    }
-
-    .token.operator,
-    .token.entity,
-    .token.url,
-    .language-css .token.string,
-    .style .token.string,
-    .token.variable {
-      color: #f8f8f2;
-    }
-
-    .token.atrule,
-    .token.attr-value,
-    .token.function {
-      color: #f8f8f2;
-    }
-
-    .token.keyword {
-      color: #e6e6d1;
-    }
-
-    .token.regex,
-    .token.important {
-      color: #fd971f;
-    }
-
-    .token.important,
-    .token.bold {
-      font-weight: bold;
-    }
-
-    .token.italic {
-      font-style: italic;
-    }
-
-    .token.entity {
-      cursor: help;
-    }
-  </style>
-
-
-  <div class="body">
-    <header>
-      <h1>TypeScript vs. C#: LINQ</h1>
-    </header>
-    <div id="content">
-      <!--more-->
+  <link rel="stylesheet" id="main-css" href="style.css" type="text/css" media="all" />
+</head>
+
+<body>
+  <header style='margin-left: 10%;'>
+    <h1>C# LINQ To TypeScript</h1>
+  </header>
+  <div class="container">
+    <div class="column">
       <ul>
         <li><a href="#aggregate">Aggregate</a></li>
         <li><a href="#all">All</a></li>
@@ -441,6 +47,10 @@
         <li><a href="#contains">Contains</a></li>
         <li><a href="#count">Count</a></li>
         <li><a href="#defaultifempty">DefaultIfEmpty</a></li>
+      </ul>
+    </div>
+    <div class="column">
+      <ul>
         <li><a href="#distinct">Distinct</a></li>
         <li><a href="#elementat">ElementAt</a></li>
         <li><a href="#elementatordefault">ElementAtOrDefault</a></li>
@@ -448,9 +58,13 @@
         <li><a href="#except">Except</a></li>
         <li><a href="#first">First</a></li>
         <li><a href="#firstordefault">FirstOrDefault</a></li>
-        <li><a href="#list-foreach">List.ForEach</a></li>
+        <li><a href="#list-foreach">List: ForEach</a></li>
         <li><a href="#groupby">GroupBy</a></li>
         <li><a href="#intersect">Intersect</a></li>
+      </ul>
+    </div>
+    <div class="column">
+      <ul>
         <li><a href="#last">Last</a></li>
         <li><a href="#lastordefault">LastOrDefault</a></li>
         <li><a href="#max">Max</a></li>
@@ -461,6 +75,10 @@
         <li><a href="#select">Select</a></li>
         <li><a href="#selectmany">SelectMany</a></li>
         <li><a href="#single">Single</a></li>
+      </ul>
+    </div>
+    <div class="column">
+      <ul>
         <li><a href="#singleordefault">SingleOrDefault</a></li>
         <li><a href="#skip">Skip</a></li>
         <li><a href="#skipwhile">SkipWhile</a></li>
@@ -471,206 +89,211 @@
         <li><a href="#where">Where</a></li>
         <li><a href="#zip">Zip</a></li>
       </ul>
-      <h3 id="aggregate">Aggregate</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">leftToRight</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Aggregate</span><span class="symbol">(</span><span class="ident">initialValue</span><span class="symbol">,</span> <span class="symbol">(</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">leftToRight</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">,</span> <span class="ident">initialValue</span><span class="symbol">);</span></span><span class="line"><span class="keyword">const</span> <span class="ident">rightToLeft</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduceRight</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">,</span> <span class="ident">initialValue</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="all">All</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allReady</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">All</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">IsReady</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allReady</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">every</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">isReady</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="any">Any</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">isDirty</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Any</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">IsDirty</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">isDirty</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">some</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">isDirty</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="append">Append</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Append</span><span class="symbol">(</span><span class="ident">oneMoreUser</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">users</span><span class="symbol">,</span> <span class="ident">oneMoreUser</span> <span class="symbol">];</span></span></code></pre>
-      <h3 id="average">Average</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">avgAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Average</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">avgAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">a</span> <span class="symbol">+</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">,</span> <span class="const">0</span><span class="symbol">)</span> <span class="symbol">/</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">;</span></span></code></pre>
-      <h3 id="cast">Cast</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">people</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Cast</span><span class="symbol">&lt;</span><span class="ident">Person</span><span class="symbol">&gt;();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">people</span> <span class="symbol">=</span> <span class="ident">users</span> <span class="keyword">as</span> <span class="ident">Person</span><span class="symbol">[];</span></span><span class="remove line"><span class="comment">// Note: not semantically the same. The C# version throws an exception</span></span><span class="remove line"><span class="comment">// if any of the users can't be cast to type Person.</span></span></code></pre>
-      <h3 id="concat">Concat</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Concat</span><span class="symbol">(</span><span class="ident">moreUsers</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">users</span><span class="symbol">,</span> <span class="symbol">...</span><span class="ident">moreUsers</span> <span class="symbol">];</span></span></code></pre>
-      <h3 id="contains">Contains</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">hasAdmin</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Contains</span><span class="symbol">(</span><span class="ident">admin</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">hasAdmin</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">admin</span><span class="symbol">);</span> <span class="comment">// Use a polyfill for IE support</span></span></code></pre>
-      <h3 id="count">Count</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">n</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Count</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">n</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">;</span></span></code></pre>
-      <h3 id="defaultifempty">DefaultIfEmpty</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">nonEmptyUsers</span> <span class="symbol">=</span> <span class="ident">Enumerable</span><span class="symbol">.</span><span class="ident">DefaultIfEmpty</span><span class="symbol">(</span><span class="ident">users</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">nonEmptyUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">?</span> <span class="ident">users</span> <span class="symbol">:</span> <span class="symbol">[</span> <span class="const">null</span> <span class="symbol">];</span></span></code></pre>
-      <h3 id="distinct">Distinct</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">uniqueNames</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Select</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Name</span><span class="symbol">).</span><span class="ident">Distinct</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">uniqueNames</span> <span class="symbol">=</span> <span class="ident">Object</span><span class="symbol">.</span><span class="ident">keys</span><span class="symbol">(</span></span><span class="line">  <span class="ident">users</span><span class="symbol">.</span><span class="ident">map</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">).</span><span class="ident">reduce</span><span class="symbol">(</span></span><span class="line">    <span class="symbol">(</span><span class="ident">un</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">({</span> <span class="symbol">...</span><span class="ident">un</span><span class="symbol">,</span> <span class="ident">n</span> <span class="symbol">}),</span></span><span class="line">    <span class="symbol">{}</span></span><span class="line">  <span class="symbol">)</span></span><span class="line"><span class="symbol">);</span></span></code></pre>
-      <h3 id="elementat">ElementAt</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">ElementAt</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">n</span> <span class="symbol">&lt;</span> <span class="const">0</span> <span class="symbol">||</span> <span class="ident">n</span> <span class="symbol">&gt;</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'Index was out of range'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">n</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="elementatordefault">ElementAtOrDefault</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">ElementAtOrDefault</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">n</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="empty">Empty</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">noUsers</span> <span class="symbol">=</span> <span class="ident">IEnumerable</span><span class="symbol">.</span><span class="ident">Empty</span><span class="symbol">&lt;</span><span class="ident">User</span><span class="symbol">&gt;();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">noUsers</span><span class="symbol">:</span> <span class="ident">User</span><span class="symbol">[]</span> <span class="symbol">=</span> <span class="symbol">[];</span></span><span class="line"><span class="keyword">const</span> <span class="ident">noUsers</span> <span class="symbol">=</span> <span class="symbol">[]</span> <span class="keyword">as</span> <span class="ident">User</span><span class="symbol">[];</span></span></code></pre>
-      <h3 id="except">Except</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">maleUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Except</span><span class="symbol">(</span><span class="ident">femaleUsers</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">maleUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span></span><span class="line">  <span class="symbol">!</span><span class="ident">femaleUsers</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">u</span><span class="symbol">)</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line"><span class="symbol">);</span></span></code></pre>
-      <h3 id="first">First</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">First</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'Sequence contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="firstordefault">FirstOrDefault</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">FirstOrDefault</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="list-foreach">List.ForEach</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="ident">users</span><span class="symbol">.</span><span class="ident">ToList</span><span class="symbol">().</span><span class="ident">ForEach</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="ident">users</span><span class="symbol">.</span><span class="ident">forEach</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="groupby">GroupBy</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">usersByCountry</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">GroupBy</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Country</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">usersByCountry</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">ubc</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">({</span></span><span class="line">  <span class="symbol">...</span><span class="ident">ubc</span><span class="symbol">,</span></span><span class="line">  <span class="symbol">[</span><span class="ident">u</span><span class="symbol">.</span><span class="ident">country</span><span class="symbol">]:</span> <span class="symbol">[</span> <span class="symbol">...(</span><span class="ident">ubc</span><span class="symbol">[</span><span class="ident">u</span><span class="symbol">.</span><span class="ident">country</span><span class="symbol">]</span> <span class="symbol">||</span> <span class="symbol">[]),</span> <span class="ident">u</span> <span class="symbol">],</span></span><span class="line"><span class="symbol">}),</span> <span class="symbol">{});</span></span></code></pre>
-      <h3 id="intersect">Intersect</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">targetUsers</span> <span class="symbol">=</span> <span class="ident">usersWhoClicked</span><span class="symbol">.</span><span class="ident">Intersect</span><span class="symbol">(</span><span class="ident">usersBetween25And45</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">targetUsers</span> <span class="symbol">=</span> <span class="ident">usersWhoClicked</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span></span><span class="line">  <span class="ident">usersBetween25And45</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">u</span><span class="symbol">)</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line"><span class="symbol">);</span></span></code></pre>
-      <h3 id="last">Last</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Last</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'Sequence contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="lastordefault">LastOrDefault</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">LastOrDefault</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="max">Max</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">oldestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Max</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">oldestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">oa</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">Math</span><span class="symbol">.</span><span class="ident">max</span><span class="symbol">(</span><span class="ident">oa</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">),</span> <span class="const">0</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="min">Min</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">youngestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Min</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">youngestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">ya</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">Math</span><span class="symbol">.</span><span class="ident">min</span><span class="symbol">(</span><span class="ident">ya</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">),</span> <span class="ident">Number</span><span class="symbol">.</span><span class="ident">MAX</span><span class="symbol">_</span><span class="ident">VALUE</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="oftype">OfType</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">bots</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">OfType</span><span class="symbol">&lt;</span><span class="ident">Bot</span><span class="symbol">&gt;();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="remove line"><span class="comment">// No equivalent</span></span></code></pre>
-      <h3 id="orderby-thenby">OrderBy / ThenBy</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">sorted</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">OrderBy</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">).</span><span class="ident">ThenBy</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Name</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">sorted</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">sort</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">b</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">const</span> <span class="ident">ageDiff</span> <span class="symbol">=</span> <span class="ident">b</span><span class="symbol">.</span><span class="ident">age</span> <span class="symbol">-</span> <span class="ident">a</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">;</span></span><span class="line">  <span class="keyword">if</span> <span class="symbol">(</span><span class="ident">ageDiff</span><span class="symbol">)</span> <span class="keyword">return</span> <span class="ident">ageDiff</span><span class="symbol">;</span></span><span class="line">  <span class="keyword">return</span> <span class="ident">a</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">.</span><span class="ident">localeCompare</span><span class="symbol">(</span><span class="ident">b</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">);</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line"><span class="symbol">});</span></span></code></pre>
-      <h3 id="reverse">Reverse</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">backwards</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Reverse</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">backwards</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reverse</span><span class="symbol">();</span></span><span class="remove line"><span class="comment">// Caution: users is also reversed!</span></span></code></pre>
-      <h3 id="select">Select</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">names</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Select</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Name</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">names</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">map</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="selectmany">SelectMany</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">phoneNumbers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">SelectMany</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">PhoneNumbers</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">phoneNumbers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">pn</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">pn</span><span class="symbol">,</span> <span class="symbol">...</span><span class="ident">u</span><span class="symbol">.</span><span class="ident">phoneNumbers</span> <span class="symbol">],</span> <span class="symbol">[]);</span></span></code></pre>
-      <h3 id="single">Single</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Single</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&gt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'The input sequence contains more than one element'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> <span class="symbol">(!</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'The input sequence is empty'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="singleordefault">SingleOrDefault</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Single</span><span class="symbol">();</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
-      <h3 id="skip">Skip</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Skip</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">((</span><span class="ident">u</span><span class="symbol">,</span> <span class="ident">i</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">i</span> <span class="symbol">&gt;=</span> <span class="ident">n</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="skipwhile">SkipWhile</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">SkipWhile</span><span class="symbol">(</span><span class="ident">predicate</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">let</span> <span class="ident">i</span> <span class="symbol">=</span> <span class="const">0</span><span class="symbol">;</span></span><span class="line"><span class="keyword">while</span> <span class="symbol">(</span><span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&amp;&amp;</span> <span class="ident">predicate</span><span class="symbol">(</span><span class="ident">users</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">++]));</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">slice</span><span class="symbol">(</span><span class="ident">i</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="sum">Sum</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">totalYears</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Sum</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">totalYears</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">ty</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">ty</span> <span class="symbol">+</span> <span class="ident">u</span><span class="symbol">,</span> <span class="const">0</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="take">Take</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Take</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">((</span><span class="ident">u</span><span class="symbol">,</span> <span class="ident">i</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">n</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="takewhile">TakeWhile</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">TakeWhile</span><span class="symbol">(</span><span class="ident">predicate</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">let</span> <span class="ident">i</span> <span class="symbol">=</span> <span class="const">0</span><span class="symbol">;</span></span><span class="line"><span class="keyword">while</span> <span class="symbol">(</span><span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&amp;&amp;</span> <span class="ident">predicate</span><span class="symbol">(</span><span class="ident">users</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">++]));</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">slice</span><span class="symbol">(</span><span class="const">0</span><span class="symbol">,</span> <span class="ident">i</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="union">Union</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">someUser</span><span class="symbol">.</span><span class="ident">Union</span><span class="symbol">(</span><span class="ident">otherUsers</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">otherUsers</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">au</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> </span><span class="line">  <span class="ident">au</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">u</span><span class="symbol">)</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line">    <span class="symbol">?</span> <span class="ident">au</span></span><span class="line">    <span class="symbol">:</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">au</span><span class="symbol">,</span> <span class="ident">u</span> <span class="symbol">]</span></span><span class="line"><span class="symbol">}),</span> <span class="ident">someUsers</span><span class="symbol">));</span></span></code></pre>
-      <h3 id="where">Where</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">adults</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Where</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span> <span class="symbol">&gt;=</span> <span class="const">18</span><span class="symbol">);</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">adults</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span> <span class="symbol">&gt;=</span> <span class="const">18</span><span class="symbol">);</span></span></code></pre>
-      <h3 id="zip">Zip</h3>
-      <pre
-        class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">matches</span> <span class="symbol">=</span> <span class="ident">buyers</span><span class="symbol">.</span><span class="ident">Zip</span><span class="symbol">(</span><span class="ident">sellers</span><span class="symbol">,</span> <span class="symbol">(</span><span class="ident">b</span><span class="symbol">,</span> <span class="ident">s</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="keyword">new</span> <span class="symbol">{</span> <span class="ident">Buyer</span> <span class="symbol">=</span> <span class="ident">b</span><span class="symbol">,</span> <span class="ident">Seller</span> <span class="symbol">=</span> <span class="ident">s</span> <span class="symbol">});</span></span></code></pre>
-      <pre
-        class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">matches</span> <span class="symbol">=</span> <span class="symbol">[];</span></span><span class="line"><span class="keyword">for</span> <span class="symbol">(</span><span class="keyword">let</span> <span class="ident">i</span> <span class="symbol">=</span> <span class="const">0</span><span class="symbol">;</span> <span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">buyers</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&amp;&amp;</span> <span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">sellers</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">;</span> <span class="ident">i</span><span class="symbol">++)</span> <span class="symbol">{</span></span><span class="line">  <span class="ident">matches</span><span class="symbol">.</span><span class="ident">push</span><span class="symbol">({</span></span><span class="line">    <span class="ident">buyer</span><span class="symbol">:</span> <span class="ident">buyers</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">],</span></span><span class="line">    <span class="ident">seller</span><span class="symbol">:</span> <span class="ident">sellers</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">],</span></span><span class="line">  <span class="symbol">});</span></span><span class="line"><span class="symbol">}</span></span></code></pre>
-
     </div>
   </div>
 
+  <!-- <div class="body"> -->
+  <div id="content">
+    <h3 id="aggregate">Aggregate</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">leftToRight</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Aggregate</span><span class="symbol">(</span><span class="ident">initialValue</span><span class="symbol">,</span> <span class="symbol">(</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">leftToRight</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">,</span> <span class="ident">initialValue</span><span class="symbol">);</span></span><span class="line"><span class="keyword">const</span> <span class="ident">rightToLeft</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduceRight</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">,</span> <span class="ident">initialValue</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="all">All</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allReady</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">All</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">IsReady</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allReady</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">every</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">isReady</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="any">Any</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">isDirty</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Any</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">IsDirty</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">isDirty</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">some</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">isDirty</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="append">Append</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Append</span><span class="symbol">(</span><span class="ident">oneMoreUser</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">users</span><span class="symbol">,</span> <span class="ident">oneMoreUser</span> <span class="symbol">];</span></span></code></pre>
+    <h3 id="average">Average</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">avgAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Average</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">avgAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">a</span> <span class="symbol">+</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">,</span> <span class="const">0</span><span class="symbol">)</span> <span class="symbol">/</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">;</span></span></code></pre>
+    <h3 id="cast">Cast</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">people</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Cast</span><span class="symbol">&lt;</span><span class="ident">Person</span><span class="symbol">&gt;();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">people</span> <span class="symbol">=</span> <span class="ident">users</span> <span class="keyword">as</span> <span class="ident">Person</span><span class="symbol">[];</span></span><span class="remove line"><span class="comment">// Note: not semantically the same. The C# version throws an exception</span></span><span class="remove line"><span class="comment">// if any of the users can't be cast to type Person.</span></span></code></pre>
+    <h3 id="concat">Concat</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Concat</span><span class="symbol">(</span><span class="ident">moreUsers</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">users</span><span class="symbol">,</span> <span class="symbol">...</span><span class="ident">moreUsers</span> <span class="symbol">];</span></span></code></pre>
+    <h3 id="contains">Contains</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">hasAdmin</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Contains</span><span class="symbol">(</span><span class="ident">admin</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">hasAdmin</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">admin</span><span class="symbol">);</span> <span class="comment">// Use a polyfill for IE support</span></span></code></pre>
+    <h3 id="count">Count</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">n</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Count</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">n</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">;</span></span></code></pre>
+    <h3 id="defaultifempty">DefaultIfEmpty</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">nonEmptyUsers</span> <span class="symbol">=</span> <span class="ident">Enumerable</span><span class="symbol">.</span><span class="ident">DefaultIfEmpty</span><span class="symbol">(</span><span class="ident">users</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">nonEmptyUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">?</span> <span class="ident">users</span> <span class="symbol">:</span> <span class="symbol">[</span> <span class="const">null</span> <span class="symbol">];</span></span></code></pre>
+    <h3 id="distinct">Distinct</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">uniqueNames</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Select</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Name</span><span class="symbol">).</span><span class="ident">Distinct</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">uniqueNames</span> <span class="symbol">=</span> <span class="ident">Object</span><span class="symbol">.</span><span class="ident">keys</span><span class="symbol">(</span></span><span class="line">  <span class="ident">users</span><span class="symbol">.</span><span class="ident">map</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">).</span><span class="ident">reduce</span><span class="symbol">(</span></span><span class="line">    <span class="symbol">(</span><span class="ident">un</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">({</span> <span class="symbol">...</span><span class="ident">un</span><span class="symbol">,</span> <span class="ident">n</span> <span class="symbol">}),</span></span><span class="line">    <span class="symbol">{}</span></span><span class="line">  <span class="symbol">)</span></span><span class="line"><span class="symbol">);</span></span></code></pre>
+    <h3 id="elementat">ElementAt</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">ElementAt</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">n</span> <span class="symbol">&lt;</span> <span class="const">0</span> <span class="symbol">||</span> <span class="ident">n</span> <span class="symbol">&gt;</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'Index was out of range'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">n</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="elementatordefault">ElementAtOrDefault</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">ElementAtOrDefault</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">nth</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">n</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="empty">Empty</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">noUsers</span> <span class="symbol">=</span> <span class="ident">IEnumerable</span><span class="symbol">.</span><span class="ident">Empty</span><span class="symbol">&lt;</span><span class="ident">User</span><span class="symbol">&gt;();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">noUsers</span><span class="symbol">:</span> <span class="ident">User</span><span class="symbol">[]</span> <span class="symbol">=</span> <span class="symbol">[];</span></span><span class="line"><span class="keyword">const</span> <span class="ident">noUsers</span> <span class="symbol">=</span> <span class="symbol">[]</span> <span class="keyword">as</span> <span class="ident">User</span><span class="symbol">[];</span></span></code></pre>
+    <h3 id="except">Except</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">maleUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Except</span><span class="symbol">(</span><span class="ident">femaleUsers</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">maleUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span></span><span class="line">  <span class="symbol">!</span><span class="ident">femaleUsers</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">u</span><span class="symbol">)</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line"><span class="symbol">);</span></span></code></pre>
+    <h3 id="first">First</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">First</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'Sequence contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="firstordefault">FirstOrDefault</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">FirstOrDefault</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">first</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="list-foreach">List.ForEach</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="ident">users</span><span class="symbol">.</span><span class="ident">ToList</span><span class="symbol">().</span><span class="ident">ForEach</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="ident">users</span><span class="symbol">.</span><span class="ident">forEach</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="comment">/* ... */</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="groupby">GroupBy</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">usersByCountry</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">GroupBy</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Country</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">usersByCountry</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">ubc</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">({</span></span><span class="line">  <span class="symbol">...</span><span class="ident">ubc</span><span class="symbol">,</span></span><span class="line">  <span class="symbol">[</span><span class="ident">u</span><span class="symbol">.</span><span class="ident">country</span><span class="symbol">]:</span> <span class="symbol">[</span> <span class="symbol">...(</span><span class="ident">ubc</span><span class="symbol">[</span><span class="ident">u</span><span class="symbol">.</span><span class="ident">country</span><span class="symbol">]</span> <span class="symbol">||</span> <span class="symbol">[]),</span> <span class="ident">u</span> <span class="symbol">],</span></span><span class="line"><span class="symbol">}),</span> <span class="symbol">{});</span></span></code></pre>
+    <h3 id="intersect">Intersect</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">targetUsers</span> <span class="symbol">=</span> <span class="ident">usersWhoClicked</span><span class="symbol">.</span><span class="ident">Intersect</span><span class="symbol">(</span><span class="ident">usersBetween25And45</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">targetUsers</span> <span class="symbol">=</span> <span class="ident">usersWhoClicked</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span></span><span class="line">  <span class="ident">usersBetween25And45</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">u</span><span class="symbol">)</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line"><span class="symbol">);</span></span></code></pre>
+    <h3 id="last">Last</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Last</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'Sequence contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="lastordefault">LastOrDefault</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">LastOrDefault</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">last</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="max">Max</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">oldestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Max</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">oldestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">oa</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">Math</span><span class="symbol">.</span><span class="ident">max</span><span class="symbol">(</span><span class="ident">oa</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">),</span> <span class="const">0</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="min">Min</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">youngestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Min</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">youngestAge</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">ya</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">Math</span><span class="symbol">.</span><span class="ident">min</span><span class="symbol">(</span><span class="ident">ya</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">),</span> <span class="ident">Number</span><span class="symbol">.</span><span class="ident">MAX</span><span class="symbol">_</span><span class="ident">VALUE</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="oftype">OfType</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">bots</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">OfType</span><span class="symbol">&lt;</span><span class="ident">Bot</span><span class="symbol">&gt;();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="remove line"><span class="comment">// No equivalent</span></span></code></pre>
+    <h3 id="orderby-thenby">OrderBy / ThenBy</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">sorted</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">OrderBy</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">).</span><span class="ident">ThenBy</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Name</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">sorted</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">sort</span><span class="symbol">((</span><span class="ident">a</span><span class="symbol">,</span> <span class="ident">b</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">const</span> <span class="ident">ageDiff</span> <span class="symbol">=</span> <span class="ident">b</span><span class="symbol">.</span><span class="ident">age</span> <span class="symbol">-</span> <span class="ident">a</span><span class="symbol">.</span><span class="ident">age</span><span class="symbol">;</span></span><span class="line">  <span class="keyword">if</span> <span class="symbol">(</span><span class="ident">ageDiff</span><span class="symbol">)</span> <span class="keyword">return</span> <span class="ident">ageDiff</span><span class="symbol">;</span></span><span class="line">  <span class="keyword">return</span> <span class="ident">a</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">.</span><span class="ident">localeCompare</span><span class="symbol">(</span><span class="ident">b</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">);</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line"><span class="symbol">});</span></span></code></pre>
+    <h3 id="reverse">Reverse</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">backwards</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Reverse</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">backwards</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reverse</span><span class="symbol">();</span></span><span class="remove line"><span class="comment">// Caution: users is also reversed!</span></span></code></pre>
+    <h3 id="select">Select</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">names</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Select</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Name</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">names</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">map</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">name</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="selectmany">SelectMany</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">phoneNumbers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">SelectMany</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">PhoneNumbers</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">phoneNumbers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">pn</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">pn</span><span class="symbol">,</span> <span class="symbol">...</span><span class="ident">u</span><span class="symbol">.</span><span class="ident">phoneNumbers</span> <span class="symbol">],</span> <span class="symbol">[]);</span></span></code></pre>
+    <h3 id="single">Single</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Single</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&gt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'The input sequence contains more than one element'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">else</span> <span class="keyword">if</span> <span class="symbol">(!</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'The input sequence is empty'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="singleordefault">SingleOrDefault</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Single</span><span class="symbol">();</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">user</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">[</span><span class="const">0</span><span class="symbol">];</span></span></code></pre>
+    <h3 id="skip">Skip</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Skip</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">((</span><span class="ident">u</span><span class="symbol">,</span> <span class="ident">i</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">i</span> <span class="symbol">&gt;=</span> <span class="ident">n</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="skipwhile">SkipWhile</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">SkipWhile</span><span class="symbol">(</span><span class="ident">predicate</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">let</span> <span class="ident">i</span> <span class="symbol">=</span> <span class="const">0</span><span class="symbol">;</span></span><span class="line"><span class="keyword">while</span> <span class="symbol">(</span><span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&amp;&amp;</span> <span class="ident">predicate</span><span class="symbol">(</span><span class="ident">users</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">++]));</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">slice</span><span class="symbol">(</span><span class="ident">i</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="sum">Sum</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">totalYears</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Sum</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">if</span> <span class="symbol">(</span><span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&lt;</span> <span class="const">1</span><span class="symbol">)</span> <span class="symbol">{</span></span><span class="line">  <span class="keyword">throw</span> <span class="keyword">new</span> <span class="ident">Error</span><span class="symbol">(</span><span class="const">'source contains no elements'</span><span class="symbol">);</span></span><span class="line"><span class="symbol">}</span></span><span class="line"><span class="keyword">const</span> <span class="ident">totalYears</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">ty</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">ty</span> <span class="symbol">+</span> <span class="ident">u</span><span class="symbol">,</span> <span class="const">0</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="take">Take</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Take</span><span class="symbol">(</span><span class="ident">n</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">((</span><span class="ident">u</span><span class="symbol">,</span> <span class="ident">i</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">n</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="takewhile">TakeWhile</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">TakeWhile</span><span class="symbol">(</span><span class="ident">predicate</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">let</span> <span class="ident">i</span> <span class="symbol">=</span> <span class="const">0</span><span class="symbol">;</span></span><span class="line"><span class="keyword">while</span> <span class="symbol">(</span><span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&amp;&amp;</span> <span class="ident">predicate</span><span class="symbol">(</span><span class="ident">users</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">++]));</span></span><span class="line"><span class="keyword">const</span> <span class="ident">otherUsers</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">slice</span><span class="symbol">(</span><span class="const">0</span><span class="symbol">,</span> <span class="ident">i</span> <span class="symbol">-</span> <span class="const">1</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="union">Union</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">someUser</span><span class="symbol">.</span><span class="ident">Union</span><span class="symbol">(</span><span class="ident">otherUsers</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">allUsers</span> <span class="symbol">=</span> <span class="ident">otherUsers</span><span class="symbol">.</span><span class="ident">reduce</span><span class="symbol">((</span><span class="ident">au</span><span class="symbol">,</span> <span class="ident">u</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> </span><span class="line">  <span class="ident">au</span><span class="symbol">.</span><span class="ident">includes</span><span class="symbol">(</span><span class="ident">u</span><span class="symbol">)</span> <span class="comment">// Use a polyfill for IE support</span></span><span class="line">    <span class="symbol">?</span> <span class="ident">au</span></span><span class="line">    <span class="symbol">:</span> <span class="symbol">[</span> <span class="symbol">...</span><span class="ident">au</span><span class="symbol">,</span> <span class="ident">u</span> <span class="symbol">]</span></span><span class="line"><span class="symbol">}),</span> <span class="ident">someUsers</span><span class="symbol">));</span></span></code></pre>
+    <h3 id="where">Where</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">adults</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">Where</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">Age</span> <span class="symbol">&gt;=</span> <span class="const">18</span><span class="symbol">);</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">adults</span> <span class="symbol">=</span> <span class="ident">users</span><span class="symbol">.</span><span class="ident">filter</span><span class="symbol">(</span><span class="ident">u</span> <span class="symbol">=&gt;</span> <span class="ident">u</span><span class="symbol">.</span><span class="ident">age</span> <span class="symbol">&gt;=</span> <span class="const">18</span><span class="symbol">);</span></span></code></pre>
+    <h3 id="zip">Zip</h3>
+    <pre
+      class="language-cs"><code class="language-cs"><span class="line"><span class="comment">// C#</span></span><span class="line"><span class="keyword">var</span> <span class="ident">matches</span> <span class="symbol">=</span> <span class="ident">buyers</span><span class="symbol">.</span><span class="ident">Zip</span><span class="symbol">(</span><span class="ident">sellers</span><span class="symbol">,</span> <span class="symbol">(</span><span class="ident">b</span><span class="symbol">,</span> <span class="ident">s</span><span class="symbol">)</span> <span class="symbol">=&gt;</span> <span class="keyword">new</span> <span class="symbol">{</span> <span class="ident">Buyer</span> <span class="symbol">=</span> <span class="ident">b</span><span class="symbol">,</span> <span class="ident">Seller</span> <span class="symbol">=</span> <span class="ident">s</span> <span class="symbol">});</span></span></code></pre>
+    <pre
+      class="language-ts"><code class="language-ts"><span class="line"><span class="comment">// TypeScript</span></span><span class="line"><span class="keyword">const</span> <span class="ident">matches</span> <span class="symbol">=</span> <span class="symbol">[];</span></span><span class="line"><span class="keyword">for</span> <span class="symbol">(</span><span class="keyword">let</span> <span class="ident">i</span> <span class="symbol">=</span> <span class="const">0</span><span class="symbol">;</span> <span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">buyers</span><span class="symbol">.</span><span class="ident">length</span> <span class="symbol">&amp;&amp;</span> <span class="ident">i</span> <span class="symbol">&lt;</span> <span class="ident">sellers</span><span class="symbol">.</span><span class="ident">length</span><span class="symbol">;</span> <span class="ident">i</span><span class="symbol">++)</span> <span class="symbol">{</span></span><span class="line">  <span class="ident">matches</span><span class="symbol">.</span><span class="ident">push</span><span class="symbol">({</span></span><span class="line">    <span class="ident">buyer</span><span class="symbol">:</span> <span class="ident">buyers</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">],</span></span><span class="line">    <span class="ident">seller</span><span class="symbol">:</span> <span class="ident">sellers</span><span class="symbol">[</span><span class="ident">i</span><span class="symbol">],</span></span><span class="line">  <span class="symbol">});</span></span><span class="line"><span class="symbol">}</span></span></code></pre>
 
-  </body>
+  </div>
+  <!-- </div> -->
+
+
+</body>
 
 </html>
